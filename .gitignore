@@ -1,0 +1,6 @@
+# Cache do Visual Studio
+.vs/
+
+# Binários
+obj/
+tfsim

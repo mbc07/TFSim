@@ -22,9 +22,12 @@ int sc_main(int argc, char *argv[])
 {
     using namespace nana;
     vector<string> instruction_queue;
-    int nadd,nmul,nls;
+    int nadd,nmul,nls,nbpb,nbtb;
     nadd = 3;
-    nmul = nls = 2;
+    nmul = 2;
+    nls  = 2;
+    nbpb = 10;
+    nbtb = 10;
     std::vector<int> sizes;
     bool spec = false;
     bool fila = false;
@@ -79,7 +82,7 @@ int sc_main(int argc, char *argv[])
         set_spec(plc,spec);
     });
     op.check_style(0,menu::checks::highlight);
-    op.append("Modificar valores...");
+    op.append("Modificar valores");
     auto sub = op.create_sub_menu(1);
     sub->append("Número de Estações de Reserva",[&](menu::item_proxy ip)
     {
@@ -94,6 +97,24 @@ int sc_main(int argc, char *argv[])
             nls = sl.value();
         }
     });
+
+    sub->append("Tamanho do Preditor de Desvios", [&](menu::item_proxy ip)
+    {
+        if (spec)
+        {
+            inputbox ibox(fm, "", "Tamanho do Preditor de Desvios");
+            inputbox::integer bpb("BPB", nbpb, 1, 100, 1);
+            inputbox::integer btb("BTB", nbtb, 1, 100, 1);
+            if (ibox.show_modal(bpb, btb))
+            {
+                nbpb = bpb.value();
+                nbtb = btb.value();
+            }
+        }
+        else
+            show_message("Especulação desativada", "Preditor de desvios disponível apenas com especulação ativada!");
+    });
+
     // Menu de ajuste dos tempos de latencia na interface
     // Novas instrucoes devem ser adcionadas manualmente aqui
     sub->append("Tempos de latência", [&](menu::item_proxy &ip)
@@ -213,7 +234,7 @@ int sc_main(int argc, char *argv[])
             }
         }
     });
-    op.append("Verificar conteúdo...");
+    op.append("Verificar conteúdo");
     auto new_sub = op.create_sub_menu(2);
     new_sub->append("Valores de registradores",[&](menu::item_proxy &ip) {
         filebox fb(0,true);
@@ -555,7 +576,7 @@ int sc_main(int argc, char *argv[])
             for(int i = 0 ; i < 5 ; i++)
                 bench_sub->enabled(i,false);
             if(spec)
-                top1.rob_mode(nadd,nmul,nls,instruct_time,instruction_queue,table,memory,reg,instruct,clock_count,rob);
+                top1.rob_mode(nadd,nmul,nls,nbpb,nbtb,instruct_time,instruction_queue,table,memory,reg,instruct,clock_count,rob);
             else
                 top1.simple_mode(nadd,nmul,nls,instruct_time,instruction_queue,table,memory,reg,instruct,clock_count);
             sc_start();
