@@ -5,6 +5,7 @@
 #include<vector>
 #include<deque>
 #include<map>
+#include<cmath>
 
 using std::vector;
 using std::deque;
@@ -37,6 +38,28 @@ public:
     void check_conflict();
 
 private:
+    struct bpb_slot {
+        unsigned int tag;
+        unsigned int prediction;
+        bpb_slot(unsigned int id)
+        {
+            tag = id;
+            prediction = 0;
+        }
+    };
+    struct btb_slot {
+        bool in_use;
+        unsigned int slot;
+        int pc;
+        int target;
+        btb_slot(unsigned int id)
+        {
+            slot = id;
+            in_use = false;
+            pc = 0;
+            target = 0;
+        }
+    };
     struct rob_slot{
         unsigned int entry;
         bool busy;
@@ -63,14 +86,20 @@ private:
         WRITE = 3,
         COMMIT = 4
     };
-    unsigned int tam;
+    unsigned int tam_bpb;
+    unsigned int tam_btb;
+    unsigned int tam_rob;
     unsigned int last_rob;
-    rob_slot **ptrs;
+    bpb_slot **bpb_ptrs;
+    btb_slot **btb_ptrs;
+    rob_slot **rob_ptrs;
     deque<rob_slot *> rob_buff;
     sc_event free_rob_event,new_rob_head_event,rob_head_value_event,resv_read_oper_event;
     branch_predictor preditor;
     map<string,unsigned int> branch_instr;
-    nana::listbox &gui_table;
+    nana::listbox &gui_table_bpb;
+    nana::listbox &gui_table_btb;
+    nana::listbox &gui_table_rob;
     nana::listbox::cat_proxy instr_queue_gui;
 
     int busy_check();

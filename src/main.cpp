@@ -26,7 +26,7 @@ int sc_main(int argc, char *argv[])
     nadd = 3;
     nmul = 2;
     nls  = 2;
-    nbpb = 10;
+    nbpb = 4;
     nbtb = 10;
     std::vector<int> sizes;
     bool spec = false;
@@ -107,7 +107,7 @@ int sc_main(int argc, char *argv[])
         if (spec)
         {
             inputbox ibox(fm, "", "Tamanho do Preditor de Desvios");
-            inputbox::integer bpb("BPB", nbpb, 1, 100, 1);
+            inputbox::integer bpb("BPB", nbpb, 1, 10, 1);
             inputbox::integer btb("BTB", nbtb, 1, 100, 1);
             if (ibox.show_modal(bpb, btb))
             {
@@ -435,16 +435,16 @@ int sc_main(int argc, char *argv[])
         rob.column_at(i).width(sizes[i]);
     }
 
-    columns = { "Tag","Prediction Buffer" };
-    sizes = { 45,120 };
+    columns = { "Tag","Prediction" };
+    sizes = { 70,80 };
     for (unsigned int i = 0; i < columns.size(); i++)
     {
         bpb.append_header(columns[i]);
         bpb.column_at(i).width(sizes[i]);
     }
 
-    columns = { "PC","Target Prediction" };
-    sizes = { 45,120 };
+    columns = { "#", "PC","Target" };
+    sizes = { 30,60,60 };
     for (unsigned int i = 0; i < columns.size(); i++)
     {
         btb.append_header(columns[i]);
@@ -592,7 +592,7 @@ int sc_main(int argc, char *argv[])
             op.enabled(0,false);
             op.enabled(1,false);
             op.enabled(3,false);
-            for(int i = 0 ; i < 6 ; i++)
+            for(int i = 0 ; i < 7 ; i++)
                 sub->enabled(i,false);
             for(int i = 0 ; i < 5 ; i++)
                 bench_sub->enabled(i,false);
