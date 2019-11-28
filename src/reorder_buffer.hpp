@@ -27,7 +27,7 @@ public:
     sc_port<write_if_f> out_resv_adu;
     sc_port<read_if_f> in_resv_adu;
     SC_HAS_PROCESS(reorder_buffer);
-    reorder_buffer(sc_module_name name,unsigned int sz,unsigned int pred_size,unsigned int bp_size, unsigned int bt_size, nana::listbox &gui, nana::listbox::cat_proxy instr_gui);
+    reorder_buffer(sc_module_name name,unsigned int sz,unsigned int pred_size,unsigned int bp_size, unsigned int bt_size, nana::listbox &rob_gui, nana::listbox &bpb_gui, nana::listbox &btb_gui, nana::listbox::cat_proxy instr_gui);
     ~reorder_buffer();
     void leitura_issue();
     void new_rob_head();

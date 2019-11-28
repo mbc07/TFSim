@@ -40,6 +40,8 @@ int sc_main(int argc, char *argv[])
     listbox reg(fm);
     listbox instruct(fm);
     listbox rob(fm);
+    listbox bpb(fm);
+    listbox btb(fm);
     menubar mnbar(fm);
     button botao(fm);
     button clock_control(fm);
@@ -62,6 +64,8 @@ int sc_main(int argc, char *argv[])
     plc["memor"] << memory;
     plc["regs"] << reg;
     plc["rob"] << rob;
+    plc["bpb"] << bpb;
+    plc["btb"] << btb;
     plc["instr"] << instruct;
     plc["clk_c"] << clock_group;
     clock_group["count"] << clock_count;
@@ -422,12 +426,29 @@ int sc_main(int argc, char *argv[])
         instruct.append_header(columns[i]);
         instruct.column_at(i).width(sizes[i]);
     }
+ 
     columns = {"Entry","Busy","Instruction","State","Destination","Value"};
     sizes = {45,45,120,120,90,60};
     for(unsigned int i = 0 ; i < columns.size() ; i++)
     {
         rob.append_header(columns[i]);
         rob.column_at(i).width(sizes[i]);
+    }
+
+    columns = { "Tag","Prediction Buffer" };
+    sizes = { 45,120 };
+    for (unsigned int i = 0; i < columns.size(); i++)
+    {
+        bpb.append_header(columns[i]);
+        bpb.column_at(i).width(sizes[i]);
+    }
+
+    columns = { "PC","Target Prediction" };
+    sizes = { 45,120 };
+    for (unsigned int i = 0; i < columns.size(); i++)
+    {
+        btb.append_header(columns[i]);
+        btb.column_at(i).width(sizes[i]);
     }
 
     srand(static_cast <unsigned> (time(0)));
@@ -576,7 +597,7 @@ int sc_main(int argc, char *argv[])
             for(int i = 0 ; i < 5 ; i++)
                 bench_sub->enabled(i,false);
             if(spec)
-                top1.rob_mode(nadd,nmul,nls,nbpb,nbtb,instruct_time,instruction_queue,table,memory,reg,instruct,clock_count,rob);
+                top1.rob_mode(nadd,nmul,nls,nbpb,nbtb,instruct_time,instruction_queue,table,memory,reg,instruct,clock_count,rob,bpb,btb);
             else
                 top1.simple_mode(nadd,nmul,nls,instruct_time,instruction_queue,table,memory,reg,instruct,clock_count);
             sc_start();

@@ -1,11 +1,11 @@
 #include <nana/gui.hpp>
 #include "reorder_buffer.hpp"
 
-reorder_buffer::reorder_buffer(sc_module_name name,unsigned int sz,unsigned int pred_size,unsigned int bp_size,unsigned int bt_size, nana::listbox &gui, nana::listbox::cat_proxy instr_gui): 
+reorder_buffer::reorder_buffer(sc_module_name name,unsigned int sz,unsigned int pred_size,unsigned int bp_size,unsigned int bt_size, nana::listbox &rob_gui, nana::listbox &bpb_gui, nana::listbox &btb_gui, nana::listbox::cat_proxy instr_gui):
 sc_module(name),
 tam(sz),
 preditor(pred_size),
-gui_table(gui),
+gui_table(rob_gui),
 instr_queue_gui(instr_gui)
 {
     last_rob = 0;
