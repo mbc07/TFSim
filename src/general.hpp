@@ -30,4 +30,15 @@ enum{
     VALUE = 5
 };
 
+enum {
+    BP_FLAG = 1,
+    BP_PRED = 2
+};
+
+enum {
+    BT_N = 1,
+    BT_P = 2,
+    BT_T = 3
+};
+
 vector<string> instruction_split(string p);

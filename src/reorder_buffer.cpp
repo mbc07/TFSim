@@ -10,8 +10,9 @@ gui_table_btb(btb_gui),
 gui_table_rob(rob_gui),
 instr_queue_gui(instr_gui)
 {
-    tam_bpb = std::pow(2, bp_size);
+    bp_bits = bp_size;
     tam_btb = bt_size;
+    tam_bpb = std::pow(2, bp_bits);
     last_rob = 0;
     branch_instr = {{"BEQ",0},{"BNE",1},{"BGTZ",2},{"BLTZ",3},{"BGEZ",4},{"BLEZ",5}};
     bpb_ptrs = new bpb_slot*[tam_bpb];
@@ -177,8 +178,10 @@ void reorder_buffer::leitura_issue()
                 cat.at(pos).text(DESTINATION,ord[2]);
                 rob_ptrs[pos]->destination = ord[2];
             }
-            rob_ptrs[pos]->prediction = preditor.predict();
-            if(preditor.predict())
+
+            cout << "Utilizando bits da tag " << (rob_ptrs[pos]->instr_pos & ((1 << bp_bits) - 1)) << " do BPB para predicao" << endl << flush;
+            rob_ptrs[pos]->prediction = preditor.predict(rob_ptrs[pos]->instr_pos & ((1<<bp_bits)-1));
+            if(preditor.predict(rob_ptrs[pos]->instr_pos & ((1<<bp_bits)-1)))
                 out_iq->write("S " + std::to_string(rob_ptrs[pos]->entry) +  ' ' + rob_ptrs[pos]->destination);
             else
                 out_iq->write("S " + std::to_string(rob_ptrs[pos]->entry));
@@ -238,7 +241,14 @@ void reorder_buffer::new_rob_head()
                 out_rb->write("F");
                 out_adu->write("F");
             }
-            preditor.update_state(pred);
+
+            int tag = rob_buff[0]->instr_pos & ((1 << bp_bits) - 1);
+            preditor.update_state(tag,pred);
+
+            // BUG: as chamadas abaixo deveriam atualizar os valores na interface gráfica porém nada acontece feijoada
+            auto cat2 = gui_table_bpb.at(0);
+            cat2.at(tag).text(BP_PRED, preditor.get_state_ui(tag));
+
         }
         else
         {

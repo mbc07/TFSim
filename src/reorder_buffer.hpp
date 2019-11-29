@@ -86,6 +86,7 @@ private:
         WRITE = 3,
         COMMIT = 4
     };
+    unsigned int bp_bits;
     unsigned int tam_bpb;
     unsigned int tam_btb;
     unsigned int tam_rob;
