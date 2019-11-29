@@ -48,14 +48,12 @@ private:
         }
     };
     struct btb_slot {
-        bool in_use;
         unsigned int slot;
         int pc;
         int target;
         btb_slot(unsigned int id)
         {
             slot = id;
-            in_use = false;
             pc = 0;
             target = 0;
         }

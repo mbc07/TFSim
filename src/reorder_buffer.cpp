@@ -181,8 +181,11 @@ void reorder_buffer::leitura_issue()
 
             cout << "Utilizando bits da tag " << (rob_ptrs[pos]->instr_pos & ((1 << bp_bits) - 1)) << " do BPB para predicao" << endl << flush;
             rob_ptrs[pos]->prediction = preditor.predict(rob_ptrs[pos]->instr_pos & ((1<<bp_bits)-1));
-            if(preditor.predict(rob_ptrs[pos]->instr_pos & ((1<<bp_bits)-1)))
-                out_iq->write("S " + std::to_string(rob_ptrs[pos]->entry) +  ' ' + rob_ptrs[pos]->destination);
+            if (preditor.predict(rob_ptrs[pos]->instr_pos & ((1 << bp_bits) - 1)))
+            {
+                out_iq->write("S " + std::to_string(rob_ptrs[pos]->entry) + ' ' + rob_ptrs[pos]->destination);
+                preditor.save_target(rob_ptrs[pos]->instr_pos, std::stoi(rob_ptrs[pos]->destination));
+            }
             else
                 out_iq->write("S " + std::to_string(rob_ptrs[pos]->entry));
             if(rob_ptrs[pos]->qj == 0 && rob_ptrs[pos]->qk == 0)
